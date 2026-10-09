@@ -55,8 +55,11 @@ def eval_loss(model: LSM, panel: LSMPanel, split: str, cfg: DictConfig, dev: tor
     model.eval()
     rng = np.random.default_rng(0)  # fixed asset subsample so the val loss is comparable
     tot, n = 0.0, 0
-    for x, p, f in panel.batches(split, int(cfg.train.batch_size), int(cfg.train.max_assets),
-                                 False, rng, dev):
+    limit = cfg.train.get("limit_batches")
+    for bi, (x, p, f) in enumerate(panel.batches(split, int(cfg.train.batch_size),
+                                                 int(cfg.train.max_assets), False, rng, dev)):
+        if limit is not None and bi >= int(limit):
+            break
         with autocast(dev, str(cfg.train.precision)):
             out = model(x, p)
         tot += recon_loss(out, x, p, f).item() * len(x)
@@ -85,8 +88,11 @@ def train(cfg: DictConfig, df: pd.DataFrame, splits: Splits, group: str = "lsm",
     for epoch in range(1, int(tr.max_epochs) + 1):
         model.train()
         t0, tot, n = time.time(), 0.0, 0
-        for x, p, f in panel.batches("train", int(tr.batch_size), int(tr.max_assets), True, rng,
-                                     dev):
+        limit = tr.get("limit_batches")  # smoke tests only; unset in real runs
+        for bi, (x, p, f) in enumerate(panel.batches("train", int(tr.batch_size),
+                                                     int(tr.max_assets), True, rng, dev)):
+            if limit is not None and bi >= int(limit):
+                break
             with autocast(dev, str(tr.precision)):
                 out = model(x, p)
                 loss = recon_loss(out, x, p, f)
@@ -175,9 +181,10 @@ def main() -> None:
     ap.add_argument("--synthetic", action="store_true", help="smoke test on in-memory synthetic data")
     ap.add_argument("--group", default="lsm")
     a = ap.parse_args()
-    extra = [config.from_dotlist(a.set)]
+    extra = []
     if a.synthetic:
         extra.append(config.from_dotlist(["data.source=synthetic", "data.n_assets=400"]))
+    extra.append(config.from_dotlist(a.set))  # --set wins
     cfg = config.merge(a.config, *a.override, *extra)
     splits = Splits.load(str(cfg.freq))
     df = load_feature_frame(cfg, splits)

@@ -1,0 +1,5 @@
+context:
+  source: lsm_n50
+  dim: 16
+  n_lsm: 50
+  contexts_path: data/features/contexts_lsm_n50.parquet

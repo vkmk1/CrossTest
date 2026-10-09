@@ -2,3 +2,4 @@ context:
   source: pca
   dim: 16
   fit_on: mkt_features
+  lags: 1                 # mkt vector is 10-dim < d=16; stack t and t-1 (DECISIONS.md #17)

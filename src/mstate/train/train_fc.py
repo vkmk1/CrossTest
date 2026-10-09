@@ -113,7 +113,10 @@ def train_one(cfg: DictConfig, ds: ForecastData, seed: int, horizon: int,
     for epoch in range(1, int(tr.max_epochs) + 1):
         model.train()
         t0, tot, cnt = time.time(), 0.0, 0
-        for x, c, y, _ in ds.batches("train", bs, shuffle=True, rng=rng):
+        limit = tr.get("limit_batches")  # smoke tests only; unset in real runs
+        for bi, (x, c, y, _) in enumerate(ds.batches("train", bs, shuffle=True, rng=rng)):
+            if limit is not None and bi >= int(limit):
+                break
             with autocast(dev, str(tr.precision)):
                 pred = model(x, c)[:, 0]
             loss = torch.mean((pred.float() - y) ** 2)
