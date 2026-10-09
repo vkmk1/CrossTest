@@ -1,0 +1,11 @@
+# data and run artifacts are never committed
+data/
+runs/
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+.ipynb_checkpoints/

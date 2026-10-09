@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mstate"
+version = "0.1.0"
+description = "Learned cross-sectional market state as context for single-asset forecasting (Phase 0: daily CRSP)."
+authors = [{ name = "Vikram Kakaria" }]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pyarrow>=14",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "scikit-learn>=1.3",
+    "hmmlearn>=0.3",
+    "torch>=2.1",
+    "omegaconf>=2.3",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+wrds = ["wrds>=3.2"]
+dev = ["pytest>=8", "ruff>=0.4", "mypy>=1.8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "NPY"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
