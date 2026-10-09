@@ -18,6 +18,9 @@ def seed_everything(seed: int) -> None:
 
 
 def device() -> torch.device:
+    """CUDA, else MPS, else CPU; ``MSTATE_DEVICE`` (e.g. ``cpu``) overrides."""
+    if os.environ.get("MSTATE_DEVICE"):
+        return torch.device(os.environ["MSTATE_DEVICE"])
     if torch.cuda.is_available():
         return torch.device("cuda")
     if torch.backends.mps.is_available():
