@@ -1,0 +1,9 @@
+# Labeled regime-change periods for H5. Fill FOMC and CPI dates from the Fed and BLS calendars at build time.
+windows:
+  - name: covid_crash
+    start: 2020-02-24
+    end:   2020-03-23
+fomc_decision_days: fetch   # scripts/build_events.py pulls from federalreserve.gov calendar
+cpi_release_days: fetch     # scripts/build_events.py pulls from bls.gov schedule
+top_rv_days_in_test: 10     # computed from data
+quiet_fraction: 0.20

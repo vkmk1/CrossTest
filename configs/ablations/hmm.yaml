@@ -1,0 +1,5 @@
+context:
+  source: hmm
+  dim: 16
+  n_states: 3
+  series: mkt_median_lrv

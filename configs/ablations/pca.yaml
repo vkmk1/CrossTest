@@ -1,0 +1,4 @@
+context:
+  source: pca
+  dim: 16
+  fit_on: mkt_features

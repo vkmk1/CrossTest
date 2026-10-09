@@ -1,0 +1,5 @@
+context:
+  source: lsm_e2e
+  dim: 16
+  lsm_config: configs/lsm_daily.yaml
+  mode: e2e

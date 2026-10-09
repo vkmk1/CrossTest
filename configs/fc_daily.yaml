@@ -1,0 +1,33 @@
+# Stage 2: forecaster, daily. THIS FILE DOES NOT CHANGE BETWEEN ABLATIONS except via ablations/*.yaml overrides.
+seeds: [0, 1, 2, 3, 4]
+freq: daily
+eval_universe: 200        # top-200 by cap; fixed across all runs
+features: [ret, lrv, lvol, range, turn]
+lookback: 60
+target: lrv               # lrv | ret_quantiles | lspread
+horizons: [1, 5]
+context:
+  source: none            # overridden by ablations/*.yaml
+  dim: 16
+inject: film              # film | concat | xattn
+model:
+  d_model: 128
+  n_heads: 4
+  n_layers: 3
+  dropout: 0.1
+loss:
+  lrv: mse
+  ret_quantiles: [0.05, 0.25, 0.5, 0.75, 0.95]
+train:
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  batch_size: 256
+  max_epochs: 50
+  patience: 5
+  grad_clip: 1.0
+  precision: bf16
+eval:
+  bootstrap_resamples: 1000
+  block_len: 20

@@ -1,0 +1,34 @@
+# Stage 1: latent state model, daily, Phase 0
+seed: 0
+freq: daily
+universe: full            # one of: 50, 200, 1000, full  (top-N by market cap, fixed per year)
+features: [ret, lrv, lvol, range, turn, mkt_median_ret, mkt_mad_ret, mkt_median_lrv, mkt_mad_lrv,
+           mkt_median_lvol, mkt_mad_lvol, mkt_median_range, mkt_mad_range, mkt_median_turn, mkt_mad_turn]
+lookback: 60
+model:
+  d_model: 128
+  n_heads: 4
+  n_temporal: 4
+  n_cross: 2              # set 0 for lsm_noxs and raise n_temporal to 6
+  summary_tokens: 64
+  d_market: 8
+  d_asset: 8
+  dropout: 0.1
+  asset_embed: false
+objective: recon          # recon | latent
+latent:
+  ema: 0.996
+  var_weight: 1.0
+  cov_weight: 0.04
+z_l1: 0.0
+train:
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  batch_size: 32          # windows of the full panel
+  max_epochs: 30
+  patience: 5
+  grad_clip: 1.0
+  precision: bf16
+export_contexts: true     # writes [z_t ; z_{i,t}] per (asset, t) to data/features/contexts_<run_id>.parquet

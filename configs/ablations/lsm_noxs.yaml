@@ -1,0 +1,4 @@
+context:
+  source: lsm_noxs
+  dim: 16
+  contexts_path: data/features/contexts_lsm_noxs_full.parquet

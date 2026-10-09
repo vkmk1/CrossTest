@@ -1,0 +1,4 @@
+context:
+  source: lsm
+  dim: 16
+  contexts_path: data/features/contexts_lsm_full.parquet
