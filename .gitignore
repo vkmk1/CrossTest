@@ -1,6 +1,6 @@
 # data and run artifacts are never committed
-data/
-runs/
+/data/
+/runs/
 .venv/
 __pycache__/
 *.egg-info/
