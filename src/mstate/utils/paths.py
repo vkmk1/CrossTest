@@ -36,3 +36,13 @@ def features_dir() -> Path:
 def config_path(rel: str | Path) -> Path:
     p = Path(rel)
     return p if p.is_absolute() else REPO_ROOT / p
+
+
+def data_path(rel: str | Path) -> Path:
+    """Resolve a config path like ``data/features/x.parquet`` against MSTATE_DATA_ROOT."""
+    p = Path(rel)
+    if p.is_absolute():
+        return p
+    if p.parts and p.parts[0] == "data":
+        return data_root().joinpath(*p.parts[1:])
+    return REPO_ROOT / p

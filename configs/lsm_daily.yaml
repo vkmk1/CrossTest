@@ -1,4 +1,5 @@
 # Stage 1: latent state model, daily, Phase 0
+name: lsm_full            # contexts land in data/features/contexts_<name>.parquet
 seed: 0
 freq: daily
 universe: full            # one of: 50, 200, 1000, full  (top-N by market cap, fixed per year)
@@ -27,8 +28,11 @@ train:
   weight_decay: 0.01
   warmup_steps: 500
   batch_size: 32          # windows of the full panel
+  max_assets: 512         # random asset subsample per training window (memory); export uses all
   max_epochs: 30
   patience: 5
   grad_clip: 1.0
   precision: bf16
+export_universe: 200      # contexts exported for the forecaster's evaluation universe
+export_batch: 8
 export_contexts: true     # writes [z_t ; z_{i,t}] per (asset, t) to data/features/contexts_<run_id>.parquet

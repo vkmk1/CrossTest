@@ -1,0 +1,3 @@
+# Phase 0 first breadth point: LSM trained on the top 50 names by cap (fixed per year)
+name: lsm_n50
+universe: 50

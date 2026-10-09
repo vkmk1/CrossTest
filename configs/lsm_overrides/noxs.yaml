@@ -1,0 +1,5 @@
+# lsm_noxs (ARCHITECTURE.md §1.5): no cross-asset attention, budget moved to temporal blocks
+name: lsm_noxs_full
+model:
+  n_cross: 0
+  n_temporal: 6

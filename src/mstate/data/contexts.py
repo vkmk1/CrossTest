@@ -10,7 +10,7 @@ import pandas as pd
 from mstate.data.datasets import DensePanel, ForecastData
 from mstate.data.splits import Splits
 from mstate.models.baselines import make_market_context, market_frame
-from mstate.utils.paths import config_path
+from mstate.utils.paths import data_path
 
 MARKET_SOURCES = ("none", "hmm", "pca", "jump")
 LSM_SOURCES = ("lsm", "lsm_noxs", "lsm_n50")
@@ -34,7 +34,7 @@ def build_contexts(ctx: dict[str, Any], df: pd.DataFrame, ds: ForecastData,
     if src.startswith("lsm"):
         if ctx.get("mode") == "e2e" or src == "lsm_e2e":
             raise NotImplementedError("lsm_e2e is a Phase 1 control")
-        path = config_path(ctx["contexts_path"])
+        path = data_path(ctx["contexts_path"])
         z = pd.read_parquet(path, filters=[("date", "<=", ds.calendar[-1])])
         cols = [f"c_{i}" for i in range(dim)]
         panel = DensePanel.from_long(z, cols, ds.permnos, ds.calendar)
